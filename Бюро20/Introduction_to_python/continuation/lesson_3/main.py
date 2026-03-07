@@ -13,7 +13,11 @@ for x in range(5):
     vk.save(f"{file_path}/photo_vk.png", "png")
 
     inst = image.resize((1080, 1080))
+    inst = inst.crop(( 10, 10, inst.height, inst.width))
+    print(inst.size)
     inst.save(f"{file_path}/photo_inst.png", "png")
     
     fb = image.resize((1200, 628))
     fb.save(f"{file_path}/photo_fb.png", "png")
+
+    
