@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Мои грамоты{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>📤 Загрузить новую грамоту</h2>
+    <form method="post" action="{{ url_for('upload') }}" enctype="multipart/form-data">
+        <input type="text" name="title" placeholder="Название (например: Олимпиада по математике)" required>
+        <textarea name="description" rows="3" placeholder="Описание (необязательно)"></textarea>
+        <input type="file" name="photo" accept="image/*" required>
+        <button type="submit">Загрузить</button>
+    </form>
+</div>
+
+<div class="card">
+    <h2>🏆 Мои грамоты ({{ photos|length }})</h2>
+
+    {% if photos %}
+        <div class="grid">
+            {% for photo in photos %}
+                <div class="photo-card">
+                    <a href="{{ url_for('static', filename='uploads/' + photo.filename) }}" target="_blank">
+                        <img src="{{ url_for('static', filename='uploads/' + photo.filename) }}" alt="{{ photo.title }}">
+                    </a>
+                    <div class="body">
+                        <h3>{{ photo.title }}</h3>
+                        {% if photo.description %}
+                            <p>{{ photo.description }}</p>
+                        {% endif %}
+                        <div class="date">{{ photo.uploaded_at.strftime('%d.%m.%Y %H:%M') }}</div>
+                    </div>
+                    <form method="post" action="{{ url_for('delete_photo', photo_id=photo.id) }}"
+                          onsubmit="return confirm('Удалить эту грамоту?');">
+                        <button type="submit" class="btn-danger" style="width:100%;">Удалить</button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="muted center">У вас пока нет загруженных грамот. Загрузите первую!</p>
+    {% endif %}
+</div>
+{% endblock %}
